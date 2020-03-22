@@ -73,6 +73,27 @@ export ANDROID=$android_version
 export UPLOAD_TYPE="ROM"
 export ROM_NAME=$rom_name
 
+# Function responsible to send build start notification
+function build_started() {
+    export BUILD_START=$(date +"%s")
+    source $SCRIPT_DIR/notify.sh started
+}
+
+# Function responsible to send build success notification
+function build_success() {
+    export BUILD_END=$(date +"%s")
+    source $SCRIPT_DIR/notify.sh success
+}
+
+# Function responsible to send build fail notification
+function build_failed() {
+    export BUILD_END=$(date +"%s")
+    source $SCRIPT_DIR/notify.sh failed
+}
+
+# Send build start notification
+build_started
+
 # ============================== Download the Source ============================== #
 
 # Function responsible for download ROM Repo if it's not found by the ROMREPO_DIR variable
@@ -154,6 +175,7 @@ repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 if [ ! -d $DT_DIR/.git ] ; then
     echo -e ${red}"Device Tree is not found!"${txtrst}
     echo -e ${red}"Aborting...."${txtrst}
+    build_failed
     exit 1
 fi
 
@@ -169,6 +191,7 @@ case  $vt_direct  in
         if [ ! -d $VT_DIR/.git ] ; then
             echo -e ${red}"Vendor Tree is not found!"${txtrst}
             echo -e ${red}"Aborting...."${txtrst}
+            build_failed
             exit 1
         fi
         ;;
@@ -176,6 +199,7 @@ case  $vt_direct  in
         if [ ! -d $VT_DIR2/.git ] ; then
             echo -e ${red}"Vendor Tree is not found!"${txtrst}
             echo -e ${red}"Aborting...."${txtrst}
+            build_failed
             exit 1
         fi
         ;;
@@ -200,6 +224,7 @@ esac
 if [ ! -d $KS_DIR/.git ] ; then
     echo -e ${red}"Kernel Source is not found!"${txtrst}
     echo -e ${red}"Aborting...."${txtrst}
+    build_failed
     exit 1
 fi
 
@@ -268,6 +293,7 @@ elif [ -e "$PACKAGE_DIR"/*"$BUILD_DATE2"*.zip ] ; then
 else
     echo -e ${red}"No ROM package generated. Looks like the build failed!"${txtrst}
     echo -e ${red}"Aborting...."${txtrst}
+    build_failed
     exit 1
 fi
 
@@ -278,10 +304,19 @@ if [ -e "$OUT_DIR"/"$device_codename"/"$rom_name"/*.zip ] ; then
     source $SCRIPT_DIR/upload.sh
     echo -e ${grn}"ROM package uploaded!"${txtrst}
 else
+    build_failed
     exit 1
 fi
 
 # =================================== Finishing =================================== #
+
+# Send build status notification
+if [ -e "$OUT_DIR"/"$device_codename"/"$rom_name"/*.zip ] ; then
+    build_success
+else
+    build_failed
+    exit 1
+fi
 
 # Return to script directory
 cd $SCRIPT_DIRECTORY
