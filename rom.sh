@@ -27,6 +27,12 @@ echo -e ${blu}"=================================="${txtrst}
 echo -e ${blu}"       Unified ROM Compiler       "${txtrst}
 echo -e ${blu}"=================================="${txtrst}
 
+# Device variable
+device_name=$aaa
+device_codename=$bbb
+device_manufacturer=$ccc
+board_platform=$ddd
+
 # CCache settings
 export USE_CCACHE=1
 export CCACHE_DIR="$HOME/.ccache/rom"
@@ -37,12 +43,12 @@ CCACHE_SIZE="120G"
 SCRIPT_DIR="$HOME/android/script"
 HOME_DIR="$HOME/android"
 ROMREPO_DIR="$HOME/android/rom"
-PACKAGE_DIR="$HOME/android/rom/out/target/product/riva"
+PACKAGE_DIR="$HOME/android/rom/out/target/product/$device_codename"
 OUT_DIR="$HOME/android/out/rom"
-DT_DIR="$HOME/android/rom/device/xiaomi/riva"
-VT_DIR="$HOME/android/rom/vendor/xiaomi"
-VT_DIR2="$HOME/android/rom/vendor/xiaomi/riva"
-KS_DIR="$HOME/android/rom/kernel/xiaomi/msm8917"
+DT_DIR="$HOME/android/rom/device/$device_manufacturer/$device_codename"
+VT_DIR="$HOME/android/rom/vendor/$device_manufacturer"
+VT_DIR2="$HOME/android/rom/vendor/$device_manufacturer/$device_codename"
+KS_DIR="$HOME/android/rom/kernel/$device_manufacturer/$board_platform"
 
 # Build date
 BUILD_DATE1=$(date +"%Y%m%d")
@@ -50,10 +56,6 @@ BUILD_DATE2=$(date +"%d%m%Y")
 
 # Build variable input
 source $SCRIPT_DIR/rom_database.sh
-
-# Device variable
-device_name=$aaa
-device_codename=$bbb
 
 # Build variable
 rom_name=$aa
