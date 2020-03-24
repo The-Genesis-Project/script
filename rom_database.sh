@@ -159,6 +159,13 @@ if [ "$f" == "10" ] ; then
             export gg=https://github.com/AICP/platform_manifest.git
             export hh=q10.0
             ;;
+        "colt")
+            export aa=ColtOS
+            export cc=colt
+            export dd=colt
+            export gg=https://github.com/Colt-Enigma/platform_manifest.git
+            export hh=c10
+            ;;
         *)
             export aa=$a # ROM NAME, ie. PixelExperience, AOSiP, etc
             export cc=$c # TARGET COMMAND, ie. bacon, kronic {mka "target_command" -j$(nproc --all)}
