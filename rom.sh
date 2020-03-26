@@ -133,6 +133,7 @@ function download_dt() {
 
 # Function responsible for download Vendor Tree if it's not found by the VT_DIR variable
 function download_vt() {
+    rm -rf $VT_DIR
     echo -e ${red}"Vendor Tree hasn't been found in $VT_DIR."${txtrst}
     echo -e ${blu}"Downloading it...."${txtrst}
     git clone --depth=1 $vt_repo -b $vt_branch $VT_DIR
@@ -140,6 +141,7 @@ function download_vt() {
 
 # Function responsible for download Vendor Tree 2 if it's not found by the VT_DIR2 variable
 function download_vt2() {
+    rm -rf $VT_DIR2
     echo -e ${red}"Vendor Tree hasn't been found in $VT_DIR2."${txtrst}
     echo -e ${blu}"Downloading it...."${txtrst}
     git clone --depth=1 $vt_repo -b $vt_branch $VT_DIR2
@@ -199,8 +201,8 @@ fi
 # Update Device Tree
 echo -e ${cya}"Updating Device Tree...."${txtrst}
 cd $DT_DIR
-git fetch origin $dt_branch
-git reset --hard origin/$dt_branch
+git fetch $dt_repo $dt_branch
+git reset --hard FETCH_HEAD
 
 # Exit with error if Vendor Tree is not found
 case  $vt_direct  in
@@ -227,13 +229,13 @@ echo -e ${cya}"Updating Vendor Tree...."${txtrst}
 case  $vt_direct  in
     "no"|"No"|"NO")
         cd $VT_DIR
-        git fetch origin $vt_branch
-        git reset --hard origin/$vt_branch
+        git fetch $vt_repo $vt_branch
+        git reset --hard FETCH_HEAD
         ;;
     "yes"|"Yes"|"YES")
         cd $VT_DIR2
-        git fetch origin $vt_branch
-        git reset --hard origin/$vt_branch
+        git fetch $vt_repo $vt_branch
+        git reset --hard FETCH_HEAD
         ;;
 esac
 
@@ -248,8 +250,8 @@ fi
 # Update Kernel Source
 echo -e ${cya}"Updating Kernel Source...."${txtrst}
 cd $KS_DIR
-git fetch origin $ks_branch
-git reset --hard origin/$ks_branch
+git fetch $ks_repo $ks_branch
+git reset --hard FETCH_HEAD
 
 # ================================= Build the ROM ================================= #
 
