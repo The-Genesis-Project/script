@@ -90,9 +90,17 @@ export ANDROID=$android_version
 export UPLOAD_TYPE="ROM"
 export ROM_NAME=$rom_name
 
+# Export global variable for notifier.sh abort notification
+echo $DEVICE > $SCRIPT_DIR/DEVICE
+echo $CODENAME > $SCRIPT_DIR/CODENAME
+echo $ANDROID > $SCRIPT_DIR/ANDROID
+echo $UPLOAD_TYPE > $SCRIPT_DIR/UPLOAD_TYPE
+echo $ROM_NAME > $SCRIPT_DIR/NAME
+
 # Function responsible to send build start notification
 function build_started() {
     export BUILD_START=$(date +"%s")
+    echo $BUILD_START > $SCRIPT_DIR/BUILD_START
     source $SCRIPT_DIR/notify.sh started
 }
 

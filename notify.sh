@@ -47,4 +47,15 @@ case  $1  in
     "failed")
         sendCI "*Build failed*%0A%0ADevice: *${DEVICE} (${CODENAME})*%0AAndroid: *${ANDROID}*%0AType: *${UPLOAD_TYPE}*%0AName: *${NAME}*%0A%0ADuration: *$((TIME / 3600))h $((TIME % 3600 / 60))m $((TIME % 60))s*%0A%0A[${BUILD_URL}]()"
         ;;
+    "aborted")
+        DEVICE=$(cat $HOME/android/script/DEVICE)
+        CODENAME=$(cat $HOME/android/script/CODENAME)
+        ANDROID=$(cat $HOME/android/script/ANDROID)
+        UPLOAD_TYPE=$(cat $HOME/android/script/UPLOAD_TYPE)
+        NAME=$(cat $HOME/android/script/NAME)
+        BUILD_START=$(cat $HOME/android/script/BUILD_START)
+        BUILD_END=$(date +"%s")
+        TIME=$((BUILD_END - BUILD_START))
+        sendCI "*Build aborted*%0A%0ADevice: *${DEVICE} (${CODENAME})*%0AAndroid: *${ANDROID}*%0AType: *${UPLOAD_TYPE}*%0AName: *${NAME}*%0A%0ADuration: *$((TIME / 3600))h $((TIME % 3600 / 60))m $((TIME % 60))s*%0A%0A[${BUILD_URL}]()"
+        ;;
 esac
