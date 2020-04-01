@@ -166,6 +166,13 @@ if [ "$f" == "10" ] ; then
             export gg=https://github.com/Colt-Enigma/platform_manifest.git
             export hh=c10
             ;;
+        "hentai")
+            export aa=HentaiOS
+            export cc=otapackage
+            export dd=hentai
+            export gg=https://github.com/HentaiOS/platform_manifest.git
+            export hh=queenslave
+            ;;
         *)
             export aa=$a # ROM NAME, ie. PixelExperience, AOSiP, etc
             export cc=$c # TARGET COMMAND, ie. bacon, kronic {mka "target_command" -j$(nproc --all)}
