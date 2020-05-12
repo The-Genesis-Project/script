@@ -16,25 +16,34 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # Directory variable
-ROM_DIR="$HOME/android/out/rom"
-KERNEL_DIR="$HOME/android/out/kernel"
+SCRIPT_DIR=$(dirname "$0")
+HOME_DIR=$(dirname "$SCRIPT_DIR")
+VAR_DIR="$HOME_DIR/var"
+ROM_DIR="$HOME_DIR/out/rom"
+KERNEL_DIR="$HOME_DIR/out/kernel"
+
+# Parameters
+CODENAME=$(cat "$VAR_DIR"/device.1)
+TYPE=$(cat "$VAR_DIR"/type)
+ROM_NAME=$(cat "$VAR_DIR"/rom.0)
+KERNEL_NAME=$(cat "$VAR_DIR"/kernel.0)
 
 # Upload script
-case  $UPLOAD_TYPE  in
+case  $TYPE  in
     "Kernel")
-        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins1 -t genesis-project,genesis-$CODENAME@shell.sourceforge.net create
-        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins1 -t genesis-project,genesis-$CODENAME@shell.sourceforge.net 'bash -c' "'
+        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins -t genesis-project,genesis-$CODENAME@shell.sourceforge.net create
+        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins -t genesis-project,genesis-$CODENAME@shell.sourceforge.net 'bash -c' "'
         cd /home/frs/project/genesis-$CODENAME/ROM/
         if [ ! -d ./$KERNEL_NAME ] ; then
             mkdir ./$KERNEL_NAME
         fi
         '"
-        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins1 -t genesis-project,genesis-$CODENAME@shell.sourceforge.net shutdown
+        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins -t genesis-project,genesis-$CODENAME@shell.sourceforge.net shutdown
         rsync -avP -e "ssh -i ~/.ssh/jenkins1 -o StrictHostKeyChecking=no" "$KERNEL_DIR"/"$CODENAME"/"$KERNEL_NAME"/*.zip genesis-project@web.sourceforge.net:/home/frs/project/genesis-$CODENAME/Kernel/$KERNEL_NAME
         ;;
     "ROM")
-        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins1 -t genesis-project,genesis-$CODENAME@shell.sourceforge.net create
-        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins1 -t genesis-project,genesis-$CODENAME@shell.sourceforge.net 'bash -c' "'
+        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins -t genesis-project,genesis-$CODENAME@shell.sourceforge.net create
+        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins -t genesis-project,genesis-$CODENAME@shell.sourceforge.net 'bash -c' "'
         cd /home/frs/project/genesis-$CODENAME/ROM/
         if [ ! -d ./$ROM_NAME ] ; then
             mkdir ./$ROM_NAME

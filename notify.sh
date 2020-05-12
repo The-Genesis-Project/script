@@ -15,47 +15,67 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# Directory variable
+SCRIPT_DIR=$(dirname "$0")
+HOME_DIR=$(dirname "$SCRIPT_DIR")
+VAR_DIR="$HOME_DIR/var"
+
 # Telegram token
-TELEGRAM_TOKEN=$(cat $HOME/temp/token/genesisproject_bot)
+TELEGRAM_TOKEN=$(cat $VAR_DIR/token/genesisproject_bot)
+
+# Parameters
+DEVICE=$(cat "$VAR_DIR"/device.0)
+CODENAME=$(cat "$VAR_DIR"/device.1)
+ANDROID=$(cat "$VAR_DIR"/android)
+TYPE=$(cat "$VAR_DIR"/type)
 
 # Time variable
-TIME=$((BUILD_END - BUILD_START))
+case  $1  in
+    "started")
+        START=$(date +"%s")
+        echo $START > "$VAR_DIR"/start
+        ;;
+    "success"|"failed"|"aborted")
+        STOP=$(date +"%s")
+        echo $STOP > "$VAR_DIR"/stop
+        BUILD_START=$(cat "$VAR_DIR"/start)
+        BUILD_STOP=$(cat "$VAR_DIR"/stop)
+        TIME=$((BUILD_STOP - BUILD_START))
+        ;;
+esac
 
 # Name variable
-case  $UPLOAD_TYPE  in
+case  $TYPE  in
     "Kernel")
+        KERNEL_NAME=$(cat "$VAR_DIR"/kernel.0)
         NAME=$KERNEL_NAME
         ;;
     "ROM")
+        ROM_NAME=$(cat "$VAR_DIR"/rom.0)
         NAME=$ROM_NAME
         ;;
 esac
 
 # Function responsible for send the message to Genesis Project [CI] channel
-function sendCI() {
+function send {
     curl -s "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendmessage" --data "text=${*}&chat_id=-1001314659481&disable_web_page_preview=true&parse_mode=Markdown" > /dev/null
 }
 
 # Message template
 case  $1  in
     "started")
-        sendCI "*Build started*%0A%0ADevice: *${DEVICE} (${CODENAME})*%0AAndroid: *${ANDROID}*%0AType: *${UPLOAD_TYPE}*%0AName: *${NAME}*%0A%0A[${BUILD_URL}]()"
+        send "*Build started*%0A%0ADevice: *${DEVICE} (${CODENAME})*%0AAndroid: *${ANDROID}*%0AType: *${TYPE}*%0AName: *${NAME}*%0A%0A[${BUILD_URL}]()"
         ;;
     "success")
-        sendCI "*Build success*%0A%0ADevice: *${DEVICE} (${CODENAME})*%0AAndroid: *${ANDROID}*%0AType: *${UPLOAD_TYPE}*%0AName: *${NAME}*%0A%0ADuration: *$((TIME / 3600))h $((TIME % 3600 / 60))m $((TIME % 60))s*%0A%0A[${BUILD_URL}]()"
+        send "*Build success*%0A%0ADevice: *${DEVICE} (${CODENAME})*%0AAndroid: *${ANDROID}*%0AType: *${TYPE}*%0AName: *${NAME}*%0A%0ADuration: *$((TIME / 3600))h $((TIME % 3600 / 60))m $((TIME % 60))s*%0A%0A[${BUILD_URL}]()"
         ;;
     "failed")
-        sendCI "*Build failed*%0A%0ADevice: *${DEVICE} (${CODENAME})*%0AAndroid: *${ANDROID}*%0AType: *${UPLOAD_TYPE}*%0AName: *${NAME}*%0A%0ADuration: *$((TIME / 3600))h $((TIME % 3600 / 60))m $((TIME % 60))s*%0A%0A[${BUILD_URL}]()"
+        send "*Build failed*%0A%0ADevice: *${DEVICE} (${CODENAME})*%0AAndroid: *${ANDROID}*%0AType: *${TYPE}*%0AName: *${NAME}*%0A%0ADuration: *$((TIME / 3600))h $((TIME % 3600 / 60))m $((TIME % 60))s*%0A%0A[${BUILD_URL}]()"
         ;;
     "aborted")
-        DEVICE=$(cat $HOME/android/script/DEVICE)
-        CODENAME=$(cat $HOME/android/script/CODENAME)
-        ANDROID=$(cat $HOME/android/script/ANDROID)
-        UPLOAD_TYPE=$(cat $HOME/android/script/UPLOAD_TYPE)
-        NAME=$(cat $HOME/android/script/NAME)
-        BUILD_START=$(cat $HOME/android/script/BUILD_START)
-        BUILD_END=$(date +"%s")
-        TIME=$((BUILD_END - BUILD_START))
-        sendCI "*Build aborted*%0A%0ADevice: *${DEVICE} (${CODENAME})*%0AAndroid: *${ANDROID}*%0AType: *${UPLOAD_TYPE}*%0AName: *${NAME}*%0A%0ADuration: *$((TIME / 3600))h $((TIME % 3600 / 60))m $((TIME % 60))s*%0A%0A[${BUILD_URL}]()"
+        send "*Build aborted*%0A%0ADevice: *${DEVICE} (${CODENAME})*%0AAndroid: *${ANDROID}*%0AType: *${TYPE}*%0AName: *${NAME}*%0A%0ADuration: *$((TIME / 3600))h $((TIME % 3600 / 60))m $((TIME % 60))s*%0A%0A[${BUILD_URL}]()"
+        ;;
+    *)
+        exit 1
         ;;
 esac
