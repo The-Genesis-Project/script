@@ -42,6 +42,13 @@
       "https://github.com/ArrowOS/android_manifest.git",
       "arrow-10.0"
     ],
+    "atom": [
+      "Atom",
+      "bacon",
+      "aosp",
+      "https://github.com/AtomOrganization/manifest.git",
+      "ten"
+    ],
     "baikal": [
       "BaikalOS",
       "baikalos",
