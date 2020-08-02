@@ -52,11 +52,6 @@ function build_success() {
 }
 
 
-function build_failed() {
-    bash $SCRIPT_DIR/notify.sh failed
-}
-
-
 function load_parameter {
     if [ ! -d $VAR_DIR ] ; then
         mkdir -p $VAR_DIR
@@ -158,7 +153,6 @@ function copy_rom {
         mv "$PACKAGE_DIR"/*"$BUILD_DATE2"*.zip "$OUT_DIR"/rom/"$DEVICE_CODENAME"/"$ROM_NAME"
     else
         echo -e ${red}"Build failed. No ROM package generated!"${txtrst}
-        build_failed
         exit 1
     fi
 }
@@ -170,7 +164,6 @@ function upload_rom {
         echo -e ${green}"ROM package uploaded!"${txtrst}
     else
         echo -e ${red}"ROM package failed to upload!"${txtrst}
-        build_failed
         exit 1
     fi
 }
