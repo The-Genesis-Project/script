@@ -5,161 +5,168 @@
       "bacon",
       "aicp",
       "https://github.com/AICP/platform_manifest.git",
-      "q10.0"
+      "q10.0",
+      "1I3Wczker4ny-DiiFrhddFcmvggzWImW5"
     ],
     "aosap": [
       "AOSAP",
       "bacon",
       "aosap",
       "https://github.com/AOSAP/platform_manifest.git",
-      "ten"
+      "ten",
+      "1YE1iGoCR15xySup_7Szqlk2KJ6jK857o"
     ],
     "aosip": [
       "AOSiP",
       "kronic",
       "aosip",
       "https://github.com/AOSiP/platform_manifest.git",
-      "ten"
+      "ten",
+      "1P1prFjH7nEfd6qtB_D7yWGpmU51tLSd8"
     ],
     "aospa": [
       "AOSPA",
       "bacon",
       "pa",
       "https://github.com/AOSPA/manifest.git",
-      "quartz"
+      "quartz",
+      "1xAZDdVOVIwwer6ZEQ4_hd2KVy4D6s0wz"
     ],
     "aex": [
       "AospExtended",
       "bacon",
       "aosp",
       "https://github.com/AospExtended/manifest.git",
-      "10.x"
+      "10.x",
+      "1Q7X5L_HqsKu0vv7VNWfzgrgqSp6208DI"
     ],
     "arrow": [
       "ArrowOS",
       "bacon",
       "arrow",
       "https://github.com/ArrowOS/android_manifest.git",
-      "arrow-10.0"
+      "arrow-10.0",
+      "1jX2uT493hZjUcMhodzUDUvMaRvQw5AXx"
     ],
     "atom": [
       "Atom",
       "bacon",
       "aosp",
       "https://github.com/AtomOrganization/manifest.git",
-      "ten"
+      "ten",
+      "1bTyn3DK4kQwm7cwBy01CBFIXp-fWWCSG"
     ],
     "baikal": [
       "BaikalOS",
       "baikalos",
       "baikalos",
       "https://github.com/baikalos/manifest.git",
-      "q10.0"
+      "q10.0",
+      "1Q8TctG_cujoaXHVwaWktaQ0GPiXDEUa6"
     ],
     "bootleggers": [
       "Bootleggers",
       "bacon",
       "bootleg",
       "https://github.com/BootleggersROM/manifest.git",
-      "queso"
+      "queso",
+      "1J2W1FJ-waE4CCSJf_TUldNUsL4JPJrwv"
     ],
     "candy": [
       "Candy",
       "candy",
       "candy",
       "https://github.com/CandyROMs/candy.git",
-      "c10"
+      "c10",
+      "1bfpC2sjL8RYRXPHTfUOb8XsHfx-XhMBW"
     ],
     "colt": [
       "ColtOS",
       "colt",
       "colt",
       "https://github.com/Colt-Enigma/platform_manifest.git",
-      "c10"
-    ],
-    "corvus": [
-      "Corvus",
-      "corvus",
-      "du",
-      "https://github.com/Corvus-ROM/android_manifest.git",
-      "10"
+      "c10",
+      "1Ui4Y5vxqjh6vTYGo0r4NQ4Fr0P02S2D4"
     ],
     "crdroid": [
       "crDroid",
       "bacon",
       "lineage",
       "https://github.com/crdroidandroid/android.git",
-      "10.0"
+      "10.0",
+      "1lk-DOVePH1iDkc-smuJyZpgN1mL8rVcx"
     ],
     "cygnus": [
       "Cygnus",
       "cygnus",
       "cygnus",
       "https://github.com/cygnus-rom/manifest.git",
-      "caf-ten"
+      "caf-ten",
+      "1rYEzjjlnGtP15XkSbgCLQ3vnHVNiZDSf"
     ],
     "derpfest": [
       "DerpFest",
       "kronic",
       "derp",
       "https://github.com/DerpLab/platform_manifest.git",
-      "ten"
-    ],
-    "evolution-x": [
-      "Evolution-X",
-      "bacon",
-      "aosp",
-      "https://github.com/Evolution-X/manifest.git",
-      "ten"
+      "ten",
+      "1lWvB0l7KAm9HhgJn3CUH1zhjqUD8_OFN"
     ],
     "havoc": [
       "Havoc-OS",
       "bacon",
       "havoc",
       "https://github.com/Havoc-OS/android_manifest.git",
-      "ten"
+      "ten",
+      "1rTtHo2Ky2mjvd5sts93FrPjVHZiLZmwP"
     ],
     "hentai": [
       "HentaiOS",
       "otapackage",
       "hentai",
       "https://github.com/HentaiOS/platform_manifest.git",
-      "queenslave"
+      "queenslave",
+      "10RxlfkaKaf9q1MyhYBW-PEsRku26s8NU"
     ],
     "lineage": [
       "LineageOS",
       "bacon",
       "lineage",
       "https://github.com/LineageOS/android.git",
-      "lineage-17.1"
+      "lineage-17.1",
+      "1OdRsBNc6HK2HfYFT_hlcuiUOW8Jg-z6j"
     ],
     "msm-xtended": [
       "MSM-Xtended",
       "xtended",
       "xtended",
       "https://github.com/Project-Xtended/manifest.git",
-      "xq"
+      "xq",
+      "1bHvSd2v5aMOOVgEei6gH8FWCrnIqrMzS"
     ],
     "nitrogen": [
       "Nitrogen-OS",
       "otapackage",
       "nitrogen",
       "https://github.com/nitrogen-project/android_manifest.git",
-      "10"
+      "10",
+      "1lcfKSVy3a8O_sJ-d2ufN0Z7SHSBXYHH4"
     ],
     "pixelexperience": [
       "PixelExperience",
       "bacon",
       "aosp",
       "https://github.com/PixelExperience/manifest.git",
-      "ten"
+      "ten",
+      "1CV0rQ3Hr8Enbs06i1x-P5QKxA7r7rMi-"
     ],
     "wave": [
       "WaveOS",
       "bacon",
       "wave",
       "https://github.com/Wave-Project/manifest.git",
-      "q"
+      "q",
+      "1nykQ_5b42oF6almU7jlMEdWTT51k3lPI"
     ]
   },
   "9": {},
