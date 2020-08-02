@@ -160,6 +160,14 @@
       "ten",
       "1CV0rQ3Hr8Enbs06i1x-P5QKxA7r7rMi-"
     ],
+    "pixelexperience-plus": [
+      "PixelExperience-Plus",
+      "bacon",
+      "aosp",
+      "https://github.com/PixelExperience/manifest.git",
+      "ten-plus",
+      "1CV0rQ3Hr8Enbs06i1x-P5QKxA7r7rMi-"
+    ],
     "wave": [
       "WaveOS",
       "bacon",
