@@ -108,7 +108,7 @@ function download_device_repo {
 }
 
 
-function gapps {
+function set_gapps {
     case  $gapps_options  in
         "no"|"No"|"NO"|"false"|"False"|"FALSE")
             export WITH_GAPPS=false
@@ -120,7 +120,7 @@ function gapps {
 }
 
 
-function ccache {
+function set_ccache {
     case  $ccache_clean  in
         "no"|"No"|"NO")
             ccache -M $CCACHE_SIZE
@@ -193,8 +193,8 @@ function main_rom {
 
     download_rom_repo
     download_device_repo
-    ccache
-    gapps
+    set_ccache
+    set_gapps
     build_rom
     copy_rom
     upload_rom
