@@ -79,11 +79,11 @@ function download_rom_repo {
 
 
 function download_device_repo {
-    if [ $ANDROID_VERSION == "8" ] ; then
+    if [[ $ANDROID_VERSION == "8" ]] ; then
         export ROOMSERVICE_DEFAULT_BRANCH="oreo"
-    elif [ $android_version == "9" ] ; then
+    elif [[ $ANDROID_VERSION == "9" ]] ; then
         export ROOMSERVICE_DEFAULT_BRANCH="pie"
-    elif [ $android_version == "10" ] ; then
+    elif [[ $ANDROID_VERSION == "10" ]] ; then
         export ROOMSERVICE_DEFAULT_BRANCH="ten"
     fi
 
