@@ -28,8 +28,8 @@ SCRIPT_DIR=$(dirname "$0")
 HOME_DIR=$(dirname "$SCRIPT_DIR")
 VAR_DIR="$HOME_DIR/var"
 ROMREPO_DIR="$HOME_DIR/rom"
-PACKAGE_DIR="$ROMREPO_DIR/out/target/product/$device_codename"
-OUT_DIR="$HOME_DIR/out/rom/$device_codename/$rom_name"
+PACKAGE_DIR="$ROMREPO_DIR/out/target/product/$DEVICE_CODENAME"
+OUT_DIR="$HOME_DIR/out"
 
 # CCache settings
 export USE_CCACHE=1
@@ -40,16 +40,6 @@ CCACHE_SIZE="120G"
 # Build date
 BUILD_DATE1=$(date +"%Y%m%d")
 BUILD_DATE2=$(date +"%d%m%Y")
-
-# Input parameter
-device_name=$DEVICE_NAME
-android_version=$ANDROID_VERSION
-rom_name=$ROM_NAME
-dt_repo=$DT_REPO
-dt_branch=$DT_BRANCH
-build_type=$BUILD_TYPE
-gapps_option=$GAPPS_OPTION
-ccache_clean=$CCACHE_CLEAN
 
 
 function build_started() {
@@ -76,7 +66,7 @@ function load_parameter {
 
 
 function download_rom_repo {
-    if [ -e $ROMREPO_DIR/$rom_name-$android_version ] ; then
+    if [ -e $ROMREPO_DIR/$ROM_NAME-$ANDROID_VERSION ] ; then
         cd $ROMREPO_DIR
         echo -e ${green}"Syncing ROM repository."${txtrst}
         repo sync -c -j12 --force-sync --no-clone-bundle --no-tags
@@ -85,16 +75,16 @@ function download_rom_repo {
         mkdir -p $ROMREPO_DIR
         cd $ROMREPO_DIR
         echo -e ${green}"Initialising ROM repository."${txtrst}
-        repo init --depth=1 -u $rom_repo -b $rom_branch
+        repo init --depth=1 -u $ROM_REPO -b $ROM_BRANCH
         echo -e ${green}"Syncing ROM repository."${txtrst}
         repo sync -c -j12 --force-sync --no-clone-bundle --no-tags
-        touch ./$rom_name-$android_version
+        touch ./$ROM_NAME-$ANDROID_VERSION
     fi
 }
 
 
 function download_device_repo {
-    if [ $android_version == "8" ] ; then
+    if [ $ANDROID_VERSION == "8" ] ; then
         export ROOMSERVICE_DEFAULT_BRANCH="oreo"
     elif [ $android_version == "9" ] ; then
         export ROOMSERVICE_DEFAULT_BRANCH="pie"
@@ -103,25 +93,13 @@ function download_device_repo {
     fi
 
     cd $ROMREPO_DIR
-    python3 -u $SCRIPT_DIR/roomservice.py $device_manufacturer $device_codename
+    python3 -u $SCRIPT_DIR/roomservice.py $DEVICE_MANUFACTURER $DEVICE_CODENAME
     rm -rf $ROMREPO_DIR/.repo/local_manifests
 }
 
 
-function set_gapps {
-    case  $gapps_options  in
-        "no"|"No"|"NO"|"false"|"False"|"FALSE")
-            export WITH_GAPPS=false
-            ;;
-        "yes"|"Yes"|"YES"|"true"|"True"|"TRUE")
-            export WITH_GAPPS=true
-            ;;
-    esac
-}
-
-
 function set_ccache {
-    case  $ccache_clean  in
+    case  $CLEAN_CCACHE  in
         "no"|"No"|"NO")
             ccache -M $CCACHE_SIZE
             ;;
@@ -133,26 +111,51 @@ function set_ccache {
 }
 
 
+function set_gapps {
+    case  $GAPPS_OPTION  in
+        "no"|"No"|"NO"|"false"|"False"|"FALSE")
+            export WITH_GAPPS=false
+            ;;
+        "yes"|"Yes"|"YES"|"true"|"True"|"TRUE")
+            export WITH_GAPPS=true
+            ;;
+    esac
+}
+
+
+function clean_dir {
+    case  $CLEAN_BUILD  in
+        "no"|"No"|"NO")
+            # Do nothing
+            ;;
+        "yes"|"Yes"|"YES")
+            cd $ROMREPO_DIR
+            source build/envsetup.sh
+            mka clobber
+            ;;
+    esac
+}
+
+
 function build_rom {
     cd $ROMREPO_DIR
     source build/envsetup.sh
-    mka clobber
-    lunch "$lunch_command"_"$device_codename"-"$build_type"
-    mka "$target_command" -j$(nproc --all)
+    lunch "$LUNCH_COMMAND"_"$DEVICE_CODENAME"-"$BUILD_TYPE"
+    mka "$TARGET_COMMAND" -j$(nproc --all)
 }
 
 
 function copy_rom {
-    if [ ! -d "$OUT_DIR"/"$device_codename"/"$rom_name" ] ; then
-        mkdir -p "$OUT_DIR"/"$device_codename"/"$rom_name"
+    if [ ! -d "$OUT_DIR"/rom/"$DEVICE_CODENAME"/"$ROM_NAME" ] ; then
+        mkdir -p "$OUT_DIR"/rom/"$DEVICE_CODENAME"/"$ROM_NAME"
     fi
 
     if [ -e "$PACKAGE_DIR"/*"$BUILD_DATE1"*.zip ] ; then
-        rm -rf "$OUT_DIR"/"$device_codename"/"$rom_name"/*
-        cp "$PACKAGE_DIR"/*"$BUILD_DATE1"*.zip "$OUT_DIR"/"$device_codename"/"$rom_name"
+        rm -rf "$OUT_DIR"/rom/"$DEVICE_CODENAME"/"$ROM_NAME"/*
+        mv "$PACKAGE_DIR"/*"$BUILD_DATE1"*.zip "$OUT_DIR"/rom/"$DEVICE_CODENAME"/"$ROM_NAME"
     elif [ -e "$PACKAGE_DIR"/*"$BUILD_DATE2"*.zip ] ; then
-        rm -rf "$OUT_DIR"/"$device_codename"/"$rom_name"/*
-        cp "$PACKAGE_DIR"/*"$BUILD_DATE2"*.zip "$OUT_DIR"/"$device_codename"/"$rom_name"
+        rm -rf "$OUT_DIR"/rom/"$DEVICE_CODENAME"/"$ROM_NAME"/*
+        mv "$PACKAGE_DIR"/*"$BUILD_DATE2"*.zip "$OUT_DIR"/rom/"$DEVICE_CODENAME"/"$ROM_NAME"
     else
         echo -e ${red}"Build failed. No ROM package generated!"${txtrst}
         build_failed
@@ -162,7 +165,7 @@ function copy_rom {
 
 
 function upload_rom {
-    if [ -e "$OUT_DIR"/"$device_codename"/"$rom_name"/*.zip ] ; then
+    if [ -e "$OUT_DIR"/rom/"$DEVICE_CODENAME"/"$ROM_NAME"/*.zip ] ; then
         bash $SCRIPT_DIR/upload.sh
         echo -e ${green}"ROM package uploaded!"${txtrst}
     else
@@ -182,19 +185,20 @@ function main_rom {
     load_parameter
     build_started
 
-    device_name=$(cat "$VAR_DIR"/device.0)
-    device_codename=$(cat "$VAR_DIR"/device.1)
-    device_manufacturer=$(cat "$VAR_DIR"/device.2)
-    rom_name=$(cat "$VAR_DIR"/rom.0)
-    target_command=$(cat "$VAR_DIR"/rom.1)
-    lunch_command=$(cat "$VAR_DIR"/rom.2)
-    rom_repo=$(cat "$VAR_DIR"/rom.3)
-    rom_branch=$(cat "$VAR_DIR"/rom.4)
+    DEVICE_NAME=$(cat "$VAR_DIR"/device.0)
+    DEVICE_CODENAME=$(cat "$VAR_DIR"/device.1)
+    DEVICE_MANUFACTURER=$(cat "$VAR_DIR"/device.2)
+    ROM_NAME=$(cat "$VAR_DIR"/rom.0)
+    TARGET_COMMAND=$(cat "$VAR_DIR"/rom.1)
+    LUNCH_COMMAND=$(cat "$VAR_DIR"/rom.2)
+    ROM_REPO=$(cat "$VAR_DIR"/rom.3)
+    ROM_BRANCH=$(cat "$VAR_DIR"/rom.4)
 
     download_rom_repo
     download_device_repo
     set_ccache
     set_gapps
+    clean_dir
     build_rom
     copy_rom
     upload_rom

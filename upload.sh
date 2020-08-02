@@ -25,32 +25,64 @@ KERNEL_DIR="$HOME_DIR/out/kernel"
 # Parameters
 CODENAME=$(cat "$VAR_DIR"/device.1)
 TYPE=$(cat "$VAR_DIR"/type)
-ROM_NAME=$(cat "$VAR_DIR"/rom.0)
-KERNEL_NAME=$(cat "$VAR_DIR"/kernel.0)
-
-# Upload script
 case  $TYPE  in
     "Kernel")
-        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins -t genesis-project,genesis-$CODENAME@shell.sourceforge.net create
-        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins -t genesis-project,genesis-$CODENAME@shell.sourceforge.net 'bash -c' "'
-        cd /home/frs/project/genesis-$CODENAME/ROM/
-        if [ ! -d ./$KERNEL_NAME ] ; then
-            mkdir ./$KERNEL_NAME
-        fi
-        '"
-        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins -t genesis-project,genesis-$CODENAME@shell.sourceforge.net shutdown
-        rsync -avP -e "ssh -i ~/.ssh/jenkins1 -o StrictHostKeyChecking=no" "$KERNEL_DIR"/"$CODENAME"/"$KERNEL_NAME"/*.zip genesis-project@web.sourceforge.net:/home/frs/project/genesis-$CODENAME/Kernel/$KERNEL_NAME
+        KERNEL_NAME=$(cat "$VAR_DIR"/kernel.0)
         ;;
     "ROM")
-        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins -t genesis-project,genesis-$CODENAME@shell.sourceforge.net create
-        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins -t genesis-project,genesis-$CODENAME@shell.sourceforge.net 'bash -c' "'
-        cd /home/frs/project/genesis-$CODENAME/ROM/
-        if [ ! -d ./$ROM_NAME ] ; then
-            mkdir ./$ROM_NAME
-        fi
-        '"
-        ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins1 -t genesis-project,genesis-$CODENAME@shell.sourceforge.net shutdown
-        rsync -avP -e "ssh -i ~/.ssh/jenkins1 -o StrictHostKeyChecking=no" "$ROM_DIR"/"$CODENAME"/"$ROM_NAME"/*.zip genesis-project@web.sourceforge.net:/home/frs/project/genesis-$CODENAME/ROM/$ROM_NAME
+        ROM_NAME=$(cat "$VAR_DIR"/rom.0)
+        ROM_FOLDER=$(cat "$VAR_DIR"/rom.5)
+        ;;
+    *)
+        exit 1
+        ;;
+esac
+
+# Upload script
+case  $UPLOAD_METHOD  in
+    "gd")
+        case  $TYPE  in
+            "Kernel")
+                    gdrive upload -p $KERNEL_FOLDER "$KERNEL_DIR"/"$CODENAME"/"$KERNEL_NAME"/*.zip
+                ;;
+            "ROM")
+                    gdrive upload -p $ROM_FOLDER "$ROM_DIR"/"$CODENAME"/"$ROM_NAME"/*.zip
+                ;;
+            *)
+                exit 1
+                ;;
+        esac
+        ;;
+    "sf")
+        case  $TYPE  in
+            "Kernel")
+                ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins genesis-project,genesis-$CODENAME@shell.sourceforge.net create
+                ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins -t genesis-project,genesis-$CODENAME@shell.sourceforge.net 'bash -c' "'
+                cd /home/frs/project/genesis-$CODENAME/ROM/
+                if [ ! -d ./$KERNEL_NAME ] ; then
+                    mkdir ./$KERNEL_NAME
+                fi
+                exit
+                '"
+                ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins genesis-project,genesis-$CODENAME@shell.sourceforge.net shutdown
+                rsync -avP -e "ssh -i ~/.ssh/jenkins -o StrictHostKeyChecking=no" "$KERNEL_DIR"/"$CODENAME"/"$KERNEL_NAME"/*.zip genesis-project@web.sourceforge.net:/home/frs/project/genesis-$CODENAME/Kernel/$KERNEL_NAME
+                ;;
+            "ROM")
+                ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins genesis-project,genesis-$CODENAME@shell.sourceforge.net create
+                ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins -t genesis-project,genesis-$CODENAME@shell.sourceforge.net 'bash -c' "'
+                cd /home/frs/project/genesis-$CODENAME/ROM/
+                if [ ! -d ./$ROM_NAME ] ; then
+                    mkdir ./$ROM_NAME
+                fi
+                exit
+                '"
+                ssh -q -o StrictHostKeyChecking=no -i ~/.ssh/jenkins genesis-project,genesis-$CODENAME@shell.sourceforge.net shutdown
+                rsync -avP -e "ssh -i ~/.ssh/jenkins -o StrictHostKeyChecking=no" "$ROM_DIR"/"$CODENAME"/"$ROM_NAME"/*.zip genesis-project@web.sourceforge.net:/home/frs/project/genesis-$CODENAME/ROM/$ROM_NAME
+                ;;
+            *)
+                exit 1
+                ;;
+        esac
         ;;
     *)
         exit 1

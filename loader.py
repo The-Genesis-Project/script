@@ -48,7 +48,7 @@ def check_parameters(parameters):
             sys.exit(1)
 
 
-def get_device_variable(device_name):
+def get_device_variable(device_codename):
     database_file = f'{SCRIPT_DIR}/device.database'
     database = glob(database_file)
     if database:
@@ -60,7 +60,7 @@ def get_device_variable(device_name):
         print(red+"Device database file not found."+reset)
         sys.exit(1)
 
-    device = devices[f'{device_name}']
+    device = devices[f'{device_codename}']
     return device
 
 
@@ -81,27 +81,31 @@ def get_rom_variable(android_version, rom_name):
 
 
 def main():
-    device_name = os.getenv('DEVICE_NAME')
+    device_codename = os.getenv('DEVICE_CODENAME')
     android_version = os.getenv('ANDROID_VERSION')
-    rom_name = os.getenv('ROM_NAME')
+    rom_name = os.getenv('ROM')
     dt_repo = os.getenv('DT_REPO')
     dt_branch = os.getenv('DT_BRANCH')
     build_type = os.getenv('BUILD_TYPE')
     gapps_option = os.getenv('GAPPS_OPTION')
-    ccache_clean = os.getenv('CCACHE_CLEAN')
+    clean_ccache = os.getenv('CLEAN_CCACHE')
+    clean_build = os.getenv('CLEAN_BUILD')
+    upload_method = os.getenv('UPLOAD_METHOD')
     parameters = [
-        device_name,
+        device_codename,
         android_version,
         rom_name,
         dt_repo,
         dt_branch,
         build_type,
         gapps_option,
-        ccache_clean,
+        clean_ccache,
+        clean_build,
+        upload_method
     ]
     check_parameters(parameters)
 
-    device = get_device_variable(device_name)
+    device = get_device_variable(device_codename)
     device_name = device[0]
     device_codename = device[1]
     device_manufacturer = device[2]
@@ -116,7 +120,8 @@ def main():
     lunch_command = rom[2]
     rom_repo = rom[3]
     rom_branch = rom[4]
-    for i in range(0,5):
+    rom_drive = rom[5]
+    for i in range(0,6):
         with open(f'{VAR_DIR}/rom.{i}', 'wt') as vf:
             vf.write(rom[i])
             vf.close()
