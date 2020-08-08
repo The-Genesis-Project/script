@@ -88,6 +88,14 @@
       "c10",
       "1Ui4Y5vxqjh6vTYGo0r4NQ4Fr0P02S2D4"
     ],
+    "conquer": [
+      "ConquerOS",
+      "carthage",
+      "conquer",
+      "https://github.com/ConquerOS/manifest.git",
+      "ten",
+      "1bhIdX5O6g6n8QzRYk0lvYXavaXSRDqlZ"
+    ],
     "crdroid": [
       "crDroid",
       "bacon",
